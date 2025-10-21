@@ -319,9 +319,9 @@ class ReminderDetailPopup(Popup):
         self.size_hint = (0.95, 0.9)
         
         main_layout = BoxLayout(orientation='vertical', spacing=15, padding=15)
-        
+
         add_section = BoxLayout(orientation='vertical', size_hint_y=None, height=180, spacing=10)
-        
+
         add_title = Label(
             text='Додати нове нагадування',
             font_size=18,
@@ -379,9 +379,9 @@ class ReminderDetailPopup(Popup):
         
 
         divider = Label(
-            text='─' * 50,
+            text='' * 50,
             size_hint_y=None,
-            height=20,
+            height=1,
             color=(0.7, 0.7, 0.7, 1)
         )
         
@@ -396,8 +396,8 @@ class ReminderDetailPopup(Popup):
         )
         
 
-        self.reminders_layout = BoxLayout(orientation='vertical', size_hint_y=None, spacing=5)
-        self.reminders_layout.bind(minimum_height=self.reminders_layout.setter('height'))
+        self.reminders_layout = BoxLayout(orientation='vertical', size_hint_y=None, spacing=30)
+        self.reminders_layout.bind(minimum_height=self.reminders_layout.setter('height'),)
         
         scroll = ScrollView()
         scroll.add_widget(self.reminders_layout)
@@ -475,6 +475,7 @@ class ReminderDetailPopup(Popup):
                 font_size=14,
                 color=(0.5, 0.6, 0.7, 1),
                 size_hint_y=None,
+                padding=10,
                 height=40
             )
             self.reminders_layout.add_widget(empty_label)
