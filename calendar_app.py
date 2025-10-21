@@ -31,14 +31,12 @@ class DayButton(Button):
         self.size_hint = (None, None)
         self.size = (70, 70)
         
-        # Встановлюємо текст
         if day > 0:
             self.text = str(day)
         else:
             self.text = ''
             self.disabled = True
         
-        # Встановлюємо кольори
         self.update_style()
     
     def update_style(self):
@@ -47,11 +45,11 @@ class DayButton(Button):
             self.background_color = (0.95, 0.95, 0.95, 0.3)
             self.color = (0.7, 0.7, 0.7, 0.5)
         elif self.is_today:
-            self.background_color = (0.4, 0.6, 0.85, 1)  # Голубий для сьогодні
+            self.background_color = (0.4, 0.6, 0.85, 1) 
             self.color = (1, 1, 1, 1)
             self.bold = True
         elif self.has_reminders:
-            self.background_color = (0.5, 0.7, 0.9, 1)  # Світло-голубий для днів з подіями
+            self.background_color = (0.5, 0.7, 0.9, 1) 
             self.color = (1, 1, 1, 1)
         else:
             self.background_color = (1, 1, 1, 1)
@@ -70,7 +68,6 @@ class BulkAddPopup(Popup):
         
         main_layout = BoxLayout(orientation='vertical', spacing=15, padding=15)
         
-        # Інструкція
         instruction = Label(
             text='Введіть події у форматі: дд чч подія\nНаприклад: 25 14 Зустріч з клієнтом\n(дд - день місяця, чч - година)',
             font_size=14,
@@ -80,7 +77,6 @@ class BulkAddPopup(Popup):
             halign='center'
         )
         
-        # Поле для введення подій
         self.events_input = TextInput(
             hint_text='25 14 Зустріч з клієнтом\n26 10 Дзвінок партнеру\n27 15 Презентація проекту',
             multiline=True,
@@ -88,7 +84,6 @@ class BulkAddPopup(Popup):
             background_color=(1, 1, 1, 1)
         )
         
-        # Вибір місяця
         month_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=40, spacing=10)
         month_layout.add_widget(Label(text='Місяць:', size_hint_x=0.3, color=(0.3, 0.4, 0.5, 1)))
         
@@ -103,7 +98,6 @@ class BulkAddPopup(Popup):
         )
         month_layout.add_widget(self.month_spinner)
         
-        # Вибір року
         year_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=40, spacing=10)
         year_layout.add_widget(Label(text='Рік:', size_hint_x=0.3, color=(0.3, 0.4, 0.5, 1)))
         
@@ -116,7 +110,6 @@ class BulkAddPopup(Popup):
         )
         year_layout.add_widget(self.year_spinner)
         
-        # Результат парсингу
         self.result_label = Label(
             text='Введіть події вище',
             font_size=12,
@@ -124,8 +117,7 @@ class BulkAddPopup(Popup):
             height=30,
             color=(0.4, 0.5, 0.6, 1)
         )
-        
-        # Кнопки
+
         btn_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=50, spacing=10)
         
         preview_btn = Button(
@@ -153,7 +145,7 @@ class BulkAddPopup(Popup):
         btn_layout.add_widget(add_btn)
         btn_layout.add_widget(close_btn)
         
-        # Збираємо все
+
         main_layout.add_widget(instruction)
         main_layout.add_widget(month_layout)
         main_layout.add_widget(year_layout)
@@ -172,20 +164,18 @@ class BulkAddPopup(Popup):
         lines = text.split('\n')
         events = []
         
-        # Отримуємо місяць та рік
+
         months_ua = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень',
                      'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень']
         month = months_ua.index(self.month_spinner.text) + 1
         year = int(self.year_spinner.text)
         
-        # Парсимо кожен рядок
         for line in lines:
             line = line.strip()
             if not line:
                 continue
             
-            # Шукаємо патерн: дд чч текст
-            # Можливі формати: "25 14 Зустріч", "25 14:30 Зустріч", "25 9 Зустріч"
+
             match = re.match(r'^(\d{1,2})\s+(\d{1,2}):?(\d{0,2})\s+(.+)$', line)
             
             if match:
@@ -194,12 +184,12 @@ class BulkAddPopup(Popup):
                 minute = int(match.group(3)) if match.group(3) else 0
                 event_text = match.group(4).strip()
                 
-                # Валідація
+      
                 try:
-                    # Перевіряємо чи коректна дата
+            
                     date_obj = datetime(year, month, day, hour, minute)
                     
-                    # Перевіряємо чи дата в майбутньому
+             
                     if date_obj > datetime.now():
                         events.append({
                             'day': day,
@@ -241,8 +231,7 @@ class BulkAddPopup(Popup):
         error_count = len(events) - valid_count
         
         self.result_label.text = f'Знайдено: {valid_count} коректних, {error_count} помилок'
-        
-        # Показуємо деталі
+ 
         if error_count > 0:
             errors = [e for e in events if 'error' in e]
             error_text = '\n'.join([f"• {e.get('line', '')} - {e['error']}" for e in errors[:3]])
@@ -263,7 +252,7 @@ class BulkAddPopup(Popup):
             self.show_message('Помилка', 'Всі події мають помилки!\nПеревірте формат: дд чч подія')
             return
         
-        # Додаємо події
+
         added_count = 0
         for event in valid_events:
             reminder = {
@@ -276,11 +265,9 @@ class BulkAddPopup(Popup):
             }
             self.app_instance.reminders.append(reminder)
             added_count += 1
-        
-        # Сортуємо нагадування
+
         self.app_instance.reminders.sort(key=lambda x: x.get('datetime', ''))
-        
-        # Зберігаємо
+
         self.app_instance.save_reminders()
         self.app_instance.update_calendar()
         
@@ -322,8 +309,7 @@ class ReminderDetailPopup(Popup):
         super(ReminderDetailPopup, self).__init__(**kwargs)
         self.date_obj = date_obj
         self.app_instance = app_instance
-        
-        # Форматуємо дату для відображення
+  
         months_ua = ['Січня', 'Лютого', 'Березня', 'Квітня', 'Травня', 'Червня',
                      'Липня', 'Серпня', 'Вересня', 'Жовтня', 'Листопада', 'Грудня']
         
@@ -334,7 +320,6 @@ class ReminderDetailPopup(Popup):
         
         main_layout = BoxLayout(orientation='vertical', spacing=15, padding=15)
         
-        # Секція додавання нового нагадування
         add_section = BoxLayout(orientation='vertical', size_hint_y=None, height=180, spacing=10)
         
         add_title = Label(
@@ -346,7 +331,7 @@ class ReminderDetailPopup(Popup):
             bold=True
         )
         
-        # Поле для тексту
+   
         text_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=40, spacing=10)
         text_layout.add_widget(Label(text='Текст:', size_hint_x=0.2, color=(0.3, 0.3, 0.3, 1)))
         
@@ -358,7 +343,6 @@ class ReminderDetailPopup(Popup):
         )
         text_layout.add_widget(self.reminder_input)
         
-        # Вибір часу
         time_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=40, spacing=10)
         time_layout.add_widget(Label(text='Час:', size_hint_x=0.2, color=(0.3, 0.3, 0.3, 1)))
         
@@ -378,8 +362,7 @@ class ReminderDetailPopup(Popup):
         )
         
         time_layout.add_widget(self.minute_spinner)
-        
-        # Кнопка додавання
+
         add_btn = Button(
             text='Додати',
             size_hint_y=None,
@@ -394,7 +377,7 @@ class ReminderDetailPopup(Popup):
         add_section.add_widget(time_layout)
         add_section.add_widget(add_btn)
         
-        # Роздільник
+
         divider = Label(
             text='─' * 50,
             size_hint_y=None,
@@ -402,7 +385,7 @@ class ReminderDetailPopup(Popup):
             color=(0.7, 0.7, 0.7, 1)
         )
         
-        # Список нагадувань на цей день
+  
         list_title = Label(
             text='Нагадування на цей день',
             font_size=18,
@@ -412,14 +395,13 @@ class ReminderDetailPopup(Popup):
             bold=True
         )
         
-        # Scrollable список
+
         self.reminders_layout = BoxLayout(orientation='vertical', size_hint_y=None, spacing=5)
         self.reminders_layout.bind(minimum_height=self.reminders_layout.setter('height'))
         
         scroll = ScrollView()
         scroll.add_widget(self.reminders_layout)
-        
-        # Кнопка закриття
+
         close_btn = Button(
             text='Закрити',
             size_hint_y=None,
@@ -428,8 +410,7 @@ class ReminderDetailPopup(Popup):
             font_size=16
         )
         close_btn.bind(on_press=self.dismiss)
-        
-        # Збираємо все разом
+
         main_layout.add_widget(add_section)
         main_layout.add_widget(divider)
         main_layout.add_widget(list_title)
@@ -438,7 +419,7 @@ class ReminderDetailPopup(Popup):
         
         self.content = main_layout
         
-        # Завантажуємо нагадування для цього дня
+   
         self.load_day_reminders()
     
     def add_reminder(self, instance):
@@ -452,16 +433,16 @@ class ReminderDetailPopup(Popup):
         hour = int(self.hour_spinner.text)
         minute = int(self.minute_spinner.text)
         
-        # Створюємо datetime
+ 
         reminder_datetime = datetime.combine(self.date_obj, datetime.min.time())
         reminder_datetime = reminder_datetime.replace(hour=hour, minute=minute)
         
-        # Перевірка, що час у майбутньому
+ 
         if reminder_datetime <= datetime.now():
             self.show_message('Помилка', 'Час нагадування має бути в майбутньому!')
             return
         
-        # Додаємо нагадування
+  
         reminder = {
             'id': len(self.app_instance.reminders) + 1,
             'title': text,
@@ -473,12 +454,10 @@ class ReminderDetailPopup(Popup):
         
         self.app_instance.reminders.append(reminder)
         self.app_instance.save_reminders()
-        
-        # Оновлюємо відображення
+      
         self.load_day_reminders()
         self.app_instance.update_calendar()
-        
-        # Очищуємо поля
+    
         self.reminder_input.text = ''
         
         self.show_message('Успіх', 'Нагадування додано!')
@@ -500,7 +479,6 @@ class ReminderDetailPopup(Popup):
             )
             self.reminders_layout.add_widget(empty_label)
         else:
-            # Сортуємо по часу
             day_reminders.sort(key=lambda x: x.get('time', '00:00'))
             
             for reminder in day_reminders:
@@ -517,7 +495,7 @@ class ReminderDetailPopup(Popup):
             spacing=10
         )
         
-        # Інформація про нагадування
+    
         info_layout = BoxLayout(orientation='vertical', size_hint_x=0.75)
         
         title_label = Label(
@@ -541,7 +519,7 @@ class ReminderDetailPopup(Popup):
         info_layout.add_widget(title_label)
         info_layout.add_widget(time_label)
         
-        # Кнопка видалення
+   
         delete_btn = Button(
             text='Видалити',
             size_hint_x=0.25,
@@ -601,7 +579,7 @@ class CalendarApp(App):
     def build(self):
         main_layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
         
-        # Заголовок
+
         header = BoxLayout(orientation='vertical', size_hint_y=None, height=100, spacing=5)
         
         app_title = Label(
@@ -612,8 +590,7 @@ class CalendarApp(App):
             color=(0.3, 0.5, 0.7, 1),
             bold=True
         )
-        
-        # Статистика
+  
         self.stats_label = Label(
             text='Всього нагадувань: 0',
             font_size=14,
@@ -624,8 +601,7 @@ class CalendarApp(App):
         
         header.add_widget(app_title)
         header.add_widget(self.stats_label)
-        
-        # Навігація по місяцях
+    
         nav_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=60, spacing=10, padding=[10, 5])
         
         prev_btn = Button(
@@ -663,8 +639,7 @@ class CalendarApp(App):
         nav_layout.add_widget(self.month_year_label)
         nav_layout.add_widget(today_btn)
         nav_layout.add_widget(next_btn)
-        
-        # Кнопка масового додавання
+
         bulk_add_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=50, spacing=10, padding=[10, 5])
         
         bulk_add_btn = Button(
@@ -677,10 +652,10 @@ class CalendarApp(App):
         
         bulk_add_layout.add_widget(bulk_add_btn)
         
-        # Сітка календаря
+ 
         self.calendar_grid = GridLayout(cols=7, spacing=5, padding=10)
         
-        # Додаємо заголовки днів тижня
+    
         days_ua = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд']
         for day in days_ua:
             day_label = Label(
@@ -693,7 +668,6 @@ class CalendarApp(App):
             )
             self.calendar_grid.add_widget(day_label)
         
-        # Легенда
         legend_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=40, spacing=20, padding=[20, 5])
         
         legend_items = [
@@ -723,7 +697,6 @@ class CalendarApp(App):
             item_layout.add_widget(text_label)
             legend_layout.add_widget(item_layout)
         
-        # Збираємо все разом
         main_layout.add_widget(header)
         main_layout.add_widget(nav_layout)
         main_layout.add_widget(bulk_add_layout)
@@ -737,42 +710,40 @@ class CalendarApp(App):
     
     def update_calendar(self):
         """Оновлює відображення календаря"""
-        # Видаляємо старі кнопки днів (зберігаємо заголовки)
+
         calendar_children = list(self.calendar_grid.children)
-        for child in calendar_children[:-7]:  # Залишаємо перші 7 (заголовки днів)
+        for child in calendar_children[:-7]: 
             self.calendar_grid.remove_widget(child)
         
-        # Оновлюємо заголовок місяця
+       
         months_ua = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень',
                      'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень']
         
         self.month_year_label.text = f"{months_ua[self.current_date.month - 1]} {self.current_date.year}"
         
-        # Оновлюємо статистику
+
         total_count = len(self.reminders)
         today_count = len([r for r in self.reminders 
                           if r.get('date') == datetime.now().strftime('%d.%m.%Y')])
         self.stats_label.text = f'Всього нагадувань: {total_count} | Сьогодні: {today_count}'
-        
-        # Отримуємо календар місяця
+ 
         cal = calendar.monthcalendar(self.current_date.year, self.current_date.month)
         today = datetime.now().date()
-        
-        # Додаємо кнопки днів
+     
         for week in cal:
             for day in week:
                 if day == 0:
-                    # Порожня клітинка
+               
                     empty_label = Label(text='', size_hint=(None, None), size=(70, 70))
                     self.calendar_grid.add_widget(empty_label)
                 else:
                     date_obj = datetime(self.current_date.year, self.current_date.month, day).date()
                     
-                    # Перевіряємо чи є нагадування на цей день
+           
                     date_str = date_obj.strftime('%d.%m.%Y')
                     has_reminders = any(r.get('date') == date_str for r in self.reminders)
                     
-                    # Створюємо кнопку дня
+                   
                     day_btn = DayButton(
                         day=day,
                         is_today=(date_obj == today),
@@ -918,3 +889,4 @@ class CalendarApp(App):
 
 if __name__ == "__main__":
     CalendarApp().run()
+
