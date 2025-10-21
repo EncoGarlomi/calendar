@@ -1,0 +1,54 @@
+<ReminderItem>:
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 0.9
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [10, 10, 10, 10]
+        Color:
+            rgba: 0.8, 0.8, 0.8, 0.3
+        Line:
+            rounded_rectangle: (self.x, self.y, self.width, self.height, 10)
+            width: 1
+
+<Button>:
+    font_size: 14
+    canvas.before:
+        Color:
+            rgba: self.background_color if self.state == 'normal' else [x * 0.8 for x in self.background_color]
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [8, 8, 8, 8]
+
+<TextInput>:
+    font_size: 14
+    multiline: False
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [8, 8, 8, 8]
+        Color:
+            rgba: 0.7, 0.7, 0.7, 1
+        Line:
+            rounded_rectangle: (self.x, self.y, self.width, self.height, 8)
+            width: 1
+
+<Spinner>:
+    font_size: 14
+    canvas.before:
+        Color:
+            rgba: 0.95, 0.95, 0.95, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [8, 8, 8, 8]
+        Color:
+            rgba: 0.7, 0.7, 0.7, 1
+        Line:
+            rounded_rectangle: (self.x, self.y, self.width, self.height, 8)
+            width: 1
