@@ -101,9 +101,9 @@ python calendar_app.py
 
 ```
 app/
-├── calendar_app.py             # APP
-├── reminder.kv                 # Файл стилей Kivy
-├── requirements.txt            # Зависимости Python
+├── calendar_app.py            # APP
+├── reminder.kv                # Файл стилей Kivy
+├── requirements.txt           # Зависимости Python
 ├── reminders.json             # Сохраненные напоминания (создается автоматически)
 └── README.md                  # Доку��ентация
 ```
@@ -141,5 +141,6 @@ app/
 - [ ] Выбор даты на несколько месяцев вперед
 
 ---
+
 
 **Приятного использования! 🎉**
